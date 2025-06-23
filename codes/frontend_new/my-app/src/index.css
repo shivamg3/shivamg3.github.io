@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@keyframes fadeInCenterToLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(0) scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-115px); /* adjust how far left you want */
+  }
+}
+
+.move-left {
+  animation: fadeInCenterToLeft 1.5s ease-out forwards;
+}
+
+/* Sidebar fade in from right */
+/*@keyframes fadeInRightSidebar {
+  0% {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.sidebar-appear {
+  animation: fadeInRightSidebar 1.2s ease-out 1s forwards;
+  opacity: 0;
+}*/
+
+@keyframes fadeInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.sidebar-appear {
+  animation: fadeInFromLeft 1s ease-out 1s forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInOnly {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.sidebar-line-appear {
+  animation: fadeInOnly 0.8s ease-out 1s forwards;
+  opacity: 0;
+}
+
+.stars {
+  background: radial-gradient(white 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.2;
+  animation: twinkle 2s infinite ease-in-out alternate;
+  z-index: -1;
+  filter: blur(1px);
+}
+
+@keyframes twinkle {
+  from { opacity: 0.1; }
+  to { opacity: 0.3; }
+}
+
+/* Add these styles for the animated dashed line */
+@keyframes move-dashes {
+  to {
+    background-position-y: -100px; /* Controls the speed and direction */
+  }
+}
+
+.animate-moving-dashes {
+  background-image: repeating-linear-gradient(
+    transparent 0,
+    transparent 8px,
+    #4a5568 8px, /* This is a gray color, matching the timeline */
+    #4a5568 20px
+  );
+  background-size: 2px 100px;
+  animation: move-dashes 2.5s linear infinite;
+}
