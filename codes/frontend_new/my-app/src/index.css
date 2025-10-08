@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* Responsive center to left animation */
 @keyframes fadeInCenterToLeft {
   0% {
     opacity: 0;
@@ -11,7 +12,39 @@
   }
   100% {
     opacity: 1;
-    transform: translateX(-115px); /* adjust how far left you want */
+    transform: translateX(-25px); /* Reduced from -75px for better positioning */
+  }
+}
+
+/* For tablets, move less to the left */
+@media (max-width: 1024px) {
+  @keyframes fadeInCenterToLeft {
+    0% {
+      opacity: 0;
+      transform: translateX(0) scale(0.95);
+    }
+    50% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(-20px);
+    }
+  }
+}
+
+/* For mobile, don't move left at all */
+@media (max-width: 768px) {
+  @keyframes fadeInCenterToLeft {
+    0% {
+      opacity: 0;
+      transform: translateX(0) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
   }
 }
 
@@ -19,23 +52,8 @@
   animation: fadeInCenterToLeft 1.5s ease-out forwards;
 }
 
-/* Sidebar fade in from right */
-/*@keyframes fadeInRightSidebar {
-  0% {
-    opacity: 0;
-    transform: translateX(100px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.sidebar-appear {
-  animation: fadeInRightSidebar 1.2s ease-out 1s forwards;
-  opacity: 0;
-}*/
-
+/* Rest of your CSS remains unchanged */
+/* Sidebar fade in animation */
 @keyframes fadeInFromLeft {
   0% {
     opacity: 0;
@@ -76,10 +94,10 @@
   to { opacity: 0.3; }
 }
 
-/* Add these styles for the animated dashed line */
+/* Animated dashed line */
 @keyframes move-dashes {
   to {
-    background-position-y: -100px; /* Controls the speed and direction */
+    background-position-y: -100px;
   }
 }
 
@@ -87,9 +105,32 @@
   background-image: repeating-linear-gradient(
     transparent 0,
     transparent 8px,
-    #4a5568 8px, /* This is a gray color, matching the timeline */
+    #4a5568 8px,
     #4a5568 20px
   );
   background-size: 2px 100px;
   animation: move-dashes 2.5s linear infinite;
+}
+
+/* Mobile menu transitions */
+.mobile-menu-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.mobile-menu-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 200ms, transform 200ms;
+}
+
+.mobile-menu-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.mobile-menu-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 200ms, transform 200ms;
 }

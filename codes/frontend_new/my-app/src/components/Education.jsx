@@ -160,7 +160,7 @@ const Education = () => {
         </span>
       </Link>
       {/* Main Container - Matches Home Page Styling */}
-      <div className="bg-white/10 backdrop-blur-xl border border-white/30 rounded-3xl shadow-2xl w-[1200px] min-h-[700px] p-16 mx-auto relative z-10">
+      <div className="bg-white/10 backdrop-blur-xl border border-white/30 rounded-3xl shadow-2xl w-full max-w-[1200px] min-h-[500px] md:min-h-[700px] p-6 sm:p-8 md:p-12 lg:p-16 mx-auto relative z-10">
         <h2 className="text-5xl font-bold mb-16 text-center text-yellow-300">
           Mistakes were made. Degrees were earned.
         </h2>
