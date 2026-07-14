@@ -1,125 +1,114 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { searchContent } from '../data/searchData';
 
+const stories = [
+  {
+    type: 'Recognition',
+    date: 'July 2026',
+    title: 'Outstanding Paper in Manufacturing Systems',
+    description: 'Our Cloud-Direct NC research received the NAMRC Outstanding Paper award—and is helping rethink how CNC machines connect to cloud intelligence.',
+    url: 'https://csl.illinois.edu/news-and-media/ferreira-group-kicking-off-a-revolution-in-computer-numerical-control-for-manufacturing',
+  },
+  {
+    type: 'Venture',
+    date: 'May 2026',
+    title: 'ToolBit wins $5,000 at Illinois',
+    description: 'I led ToolBit to third place in the TE 598 deep-tech pitch competition with an open platform for smarter existing CNC machines.',
+    url: 'https://landuyt.illinois.edu/news/82922',
+  },
+  {
+    type: 'From my blog',
+    date: 'July 2024',
+    title: 'Mastering your budget',
+    description: 'A practical guide to cost-efficient living, written for students who want to make thoughtful financial choices.',
+    url: 'https://studyandsave.blogspot.com/2024/07/mastering-your-budget-cost-efficient.html',
+  },
+];
+
 export default function Home() {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [showResults, setShowResults] = useState(false);
+  const [query, setQuery] = useState('');
+  const [showNews, setShowNews] = useState(true);
 
-  // Search as you type
+  const results = query.trim()
+    ? searchContent.filter((item) => `${item.title} ${item.content}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5)
+    : [];
+
   useEffect(() => {
-    if (searchQuery.trim()) {
-      const results = searchContent.filter(item =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.content.toLowerCase().includes(searchQuery.toLowerCase())
-      ).slice(0, 5);
-      setSearchResults(results);
-      setShowResults(true);
-    } else {
-      setShowResults(false);
-    }
-  }, [searchQuery]);
-
-  const handleResultClick = (url) => {
-    setShowResults(false);
-    navigate(url);
-    setSearchQuery('');
-  };
+    const timer = window.setTimeout(() => setShowNews(true), 500);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="move-left bg-white/10 backdrop-blur-xl border border-white/30 rounded-2xl shadow-2xl text-center 
-                    w-[95%] sm:w-[90%] md:w-[85%] lg:w-[80%] xl:w-[1000px] 2xl:w-[1200px] 
-                    min-h-[500px] sm:min-h-[600px] md:min-h-[700px] 
-                    p-4 sm:p-8 md:p-12 lg:p-16 
-                    mx-auto relative z-10">
-
-      {/* Profile Image + Hover Icons Above */}
-      <div className="flex flex-col items-center mb-6 relative group">
-        {/* Icons row (initially hidden) */}
-        <div className="absolute -top-10 sm:-top-14 flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <a href="mailto:shivam939a8@gmail.com" target="_blank" rel="noreferrer">
-            <img src="/gmail.png" alt="Gmail" className="w-6 h-6 sm:w-8 sm:h-8 hover:scale-110 transition-transform" />
-          </a>
-          <a href="https://www.linkedin.com/in/shivam-garg-iitd/" target="_blank" rel="noreferrer">
-            <img src="/linkedin.png" alt="LinkedIn" className="w-6 h-6 sm:w-8 sm:h-8 hover:scale-110 transition-transform" />
-          </a>
-          <a href="https://github.com/shivamg3" target="_blank" rel="noreferrer">
-            <img src="/github.png" alt="GitHub" className="w-6 h-6 sm:w-8 sm:h-8 hover:scale-110 transition-transform" />
-          </a>
+    <div className="home-layout">
+      <section className="hero-card glass-card">
+        <div className="profile-wrap">
+          <img src="/me.jpg" alt="Shivam Garg" className="profile-photo" />
+          <div className="availability"><span /> Building the future of manufacturing</div>
         </div>
 
-        {/* Profile Image */}
-        <img
-          src="/me.jpg"
-          alt="Shivam"
-          className="w-28 h-28 sm:w-36 sm:h-36 md:w-48 md:h-48 rounded-full border-4 border-white shadow-lg transition-transform duration-300 group-hover:scale-105 cursor-pointer"
-        />
-      </div>
-
-      {/* About Section */}
-      <div className="mt-4 sm:mt-6">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">Hi, I'm Shivam 👋</h2>
-        <p className="text-lg sm:text-xl md:text-2xl text-white/90 mt-2 sm:mt-4">
-          A mechanical engineer & maker building smart CNC systems.
+        <p className="eyebrow">Mechanical engineer · Researcher · Founder</p>
+        <h1>Hi, I’m Shivam.</h1>
+        <p className="hero-copy">
+          I build intelligent CNC systems at the intersection of manufacturing, cloud software, and entrepreneurship.
         </p>
-      </div>
 
-      {/* Search Box */}
-      <div className="w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl mx-auto mt-12 sm:mt-16 md:mt-24 relative">
-        <div className="relative">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search my portfolio..."
-            className="w-full bg-white/5 border border-white/20 rounded-full py-3 sm:py-4 px-4 sm:px-6 text-sm sm:text-base text-white/90 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300"
-          />
-          <button
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-yellow-400/90 text-gray-900 rounded-full p-1 sm:p-2"
-            onClick={() => setSearchQuery('')}
-          >
-            {searchQuery ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            )}
-          </button>
+        <div className="hero-actions">
+          <button onClick={() => navigate('/projects')} className="button primary">Explore my work</button>
+          <button onClick={() => navigate('/contact')} className="button secondary">Let’s connect</button>
         </div>
 
-        {/* Search Results */}
-        {showResults && searchQuery && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-2xl overflow-hidden z-50">
-            {searchResults.length > 0 ? (
-              <ul>
-                {searchResults.map((item) => (
-                  <li 
-                    key={item.id}
-                    onClick={() => handleResultClick(item.url)}
-                    className="p-3 sm:p-4 hover:bg-white/20 cursor-pointer transition-colors duration-200 text-left"
-                  >
-                    <h3 className="font-semibold text-yellow-400 text-sm sm:text-base">{item.title}</h3>
-                    <p className="text-white/80 text-xs sm:text-sm">{item.content}</p>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="p-3 sm:p-4 text-white/70 text-sm">
-                No results found for "{searchQuery}"
-              </div>
-            )}
+        <div className="search-wrap">
+          <label htmlFor="portfolio-search">Search this portfolio</label>
+          <div className="search-control">
+            <span aria-hidden="true">⌕</span>
+            <input
+              id="portfolio-search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Try CNC, projects, or education"
+            />
+            {query && <button onClick={() => setQuery('')} aria-label="Clear search">×</button>}
           </div>
-        )}
+          {query && (
+            <div className="search-results">
+              {results.length ? results.map((item) => (
+                <button key={item.id} onClick={() => navigate(item.url)}>
+                  <strong>{item.title}</strong><span>{item.content}</span>
+                </button>
+              )) : <p>No matching pages yet.</p>}
+            </div>
+          )}
+        </div>
+      </section>
 
-        <p className="text-white/60 mt-2 sm:mt-4 text-xs sm:text-sm">
-          Try searching for "projects", "CNC", or "experience"
-        </p>
-      </div>
+      <aside className="stories-panel" aria-labelledby="stories-title">
+        <div className="stories-heading">
+          <div><p className="eyebrow">Featured</p><h2 id="stories-title">Notes & milestones</h2></div>
+          <span className="live-dot">Latest</span>
+        </div>
+        <div className="story-list">
+          {stories.map((story) => (
+            <a className="story-card" href={story.url} target="_blank" rel="noreferrer" key={story.title}>
+              <div className="story-meta"><span>{story.type}</span><time>{story.date}</time></div>
+              <h3>{story.title}</h3>
+              <p>{story.description}</p>
+              <span className="read-more">Read story <b aria-hidden="true">↗</b></span>
+            </a>
+          ))}
+        </div>
+        <p className="editorial-note">More writing on manufacturing, industry, travel, and the things I’m learning—coming soon.</p>
+      </aside>
+
+      {showNews && (
+        <div className="news-toast" role="status">
+          <button onClick={() => setShowNews(false)} aria-label="Dismiss announcement">×</button>
+          <span className="toast-label">In the news</span>
+          <strong>Our CNC research won a NAMRC Outstanding Paper award.</strong>
+          <a href={stories[0].url} target="_blank" rel="noreferrer">Read the Illinois story →</a>
+        </div>
+      )}
     </div>
   );
 }
