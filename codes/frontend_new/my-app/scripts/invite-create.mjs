@@ -23,9 +23,11 @@ try {
     console.log(`Create a signed personalized invitation.
 
 Required:
-  --name <name> --duration <minutes> --expires <ISO date>
+  --name <name> --title <title> --description <text>
+  --event <event-key> --duration <minutes> --expires <ISO date>
 
 Optional:
+  --first-name <name> --email <email> --company <company>
   --not-before <ISO date> --kid <key-id> --private-key <path>
   --messages --no-copy`);
     process.exit(0);
@@ -36,19 +38,29 @@ Optional:
   if (!fs.existsSync(privatePath)) throw new Error(`Private key not found at ${privatePath}. Run npm run invite:keygen first.`);
   const kid = args.kid || keySet.keys.at(-1)?.kid;
   if (!kid || !keySet.keys.some((key) => key.kid === kid)) throw new Error('No matching public key ID is configured.');
-  const removedFields = ['first-name', 'email', 'company', 'title', 'description', 'event'].filter((field) => args[field] !== undefined);
-  if (removedFields.length) throw new Error(`Personalized invitations now use name, duration, and expiration only. Remove: ${removedFields.map((field) => `--${field}`).join(', ')}`);
 
+  const now = Math.floor(Date.now() / 1000);
   const name = requireArg(args, 'name').trim();
   const payload = {
-    n: name,
-    d: Number(requireArg(args, 'duration')),
-    ...(args['not-before'] ? { b: expirationTimestamp(args['not-before']) } : {}),
-    x: expirationTimestamp(requireArg(args, 'expires')),
+    v: policy.version,
+    iss: policy.issuer,
+    aud: policy.audience,
+    jti: crypto.randomUUID(),
+    name,
+    firstName: (args['first-name'] || name.split(/\s+/u)[0]).trim(),
+    ...(args.email ? { email: args.email.trim() } : {}),
+    ...(args.company ? { company: args.company.trim() } : {}),
+    title: requireArg(args, 'title').trim(),
+    description: requireArg(args, 'description').trim(),
+    eventKey: requireArg(args, 'event'),
+    duration: Number(requireArg(args, 'duration')),
+    iat: now,
+    nbf: args['not-before'] ? expirationTimestamp(args['not-before']) : now,
+    exp: expirationTimestamp(requireArg(args, 'expires')),
   };
-  const invitation = validateInvitationPayload(payload, { policy });
+  validateInvitationPayload(payload, { policy, now });
 
-  const header = { alg: 'ES256', kid };
+  const header = { alg: 'ES256', typ: 'JWT', kid };
   const signingInput = `${base64UrlJson(header)}.${base64UrlJson(payload)}`;
   const signature = crypto.sign('sha256', Buffer.from(signingInput), {
     key: fs.readFileSync(privatePath, 'utf8'),
@@ -56,14 +68,14 @@ Optional:
   }).toString('base64url');
   const token = `${signingInput}.${signature}`;
   const siteUrl = (process.env.INVITE_SITE_URL || policy.audience).replace(/\/$/, '');
-  const invitationUrl = `${siteUrl}/#m=${token}`;
+  const invitationUrl = `${siteUrl}/#meet=${token}`;
 
-  console.log(`Invitation expires: ${new Date(invitation.exp * 1000).toISOString()}`);
+  console.log(`Invitation expires: ${new Date(payload.exp * 1000).toISOString()}`);
   console.log(`Invitation URL:\n${invitationUrl}`);
   if (!args['no-copy']) console.log(copyToClipboard(invitationUrl) ? 'Copied invitation URL to the clipboard.' : 'Clipboard unavailable; copy the URL above.');
   if (args.messages) {
-    console.log(`\nEmail:\nHi ${invitation.name}, I created a personal invitation for our conversation: ${invitationUrl}`);
-    console.log(`\nLinkedIn / WhatsApp:\nHi ${invitation.name} — here’s the personal scheduling link I made for us: ${invitationUrl}`);
+    console.log(`\nEmail:\nHi ${payload.firstName}, I created a personal invitation for our conversation: ${invitationUrl}`);
+    console.log(`\nLinkedIn / WhatsApp:\nHi ${payload.firstName} — here’s the personal scheduling link I made for us: ${invitationUrl}`);
   }
 } catch (error) {
   console.error(`Invitation creation failed: ${error.message}`);

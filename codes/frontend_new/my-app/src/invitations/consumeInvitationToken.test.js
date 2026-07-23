@@ -4,14 +4,14 @@ import { consumeInvitationToken } from './consumeInvitationToken';
 describe('consumeInvitationToken', () => {
   it('removes a meeting token from the address immediately', () => {
     const replaceState = vi.fn();
-    const token = consumeInvitationToken({ hash: '#m=abc.def.ghi', pathname: '/', search: '?ref=email' }, { state: null, replaceState });
+    const token = consumeInvitationToken({ hash: '#meet=abc.def.ghi', pathname: '/', search: '?ref=email' }, { state: null, replaceState });
     expect(token).toBe('abc.def.ghi');
     expect(replaceState).toHaveBeenCalledWith(null, '', '/?ref=email');
   });
 
-  it('continues to accept legacy meeting links', () => {
+  it('continues to accept compact meeting links', () => {
     const replaceState = vi.fn();
-    expect(consumeInvitationToken({ hash: '#meet=abc.def.ghi', pathname: '/', search: '' }, { state: null, replaceState })).toBe('abc.def.ghi');
+    expect(consumeInvitationToken({ hash: '#m=abc.def.ghi', pathname: '/', search: '' }, { state: null, replaceState })).toBe('abc.def.ghi');
   });
 
   it('ignores unrelated hashes', () => {
