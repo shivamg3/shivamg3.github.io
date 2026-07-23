@@ -3,10 +3,10 @@
   "issuer": "shivam-personal-website",
   "audience": "https://shivamg3.github.io",
   "events": {
-    "intro-15": {
-      "durations": [15]
+    "short-conversation": {
+      "durations": [20]
     },
-    "conversation-30": {
+    "extended-conversation": {
       "durations": [30]
     }
   },

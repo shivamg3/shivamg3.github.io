@@ -28,11 +28,11 @@ No private key, Cal.com API key, OAuth secret, webhook secret, recipient list, o
 
 Repository code cannot configure a private calendar account. Complete these steps in Cal.com:
 
-1. Create or identify a 15-minute event type and a 30-minute event type.
+1. Confirm the configured 20-minute Short Conversation and 30-minute Extended Conversation event types remain active.
 2. Connect the Google or Outlook calendar used for conflict checking.
 3. Set the availability schedule and timezone.
 4. Configure buffers, minimum notice, booking horizon, and daily limits.
-5. Confirm each event duration; for multi-duration events, ensure 15 or 30 minutes is enabled as appropriate.
+5. Confirm the Short Conversation remains 20 minutes and the Extended Conversation remains 30 minutes.
 6. Select the destination calendar where bookings should be created.
 7. Configure Google Meet, Zoom, Teams, phone, or an in-person location.
 8. Configure confirmation emails, reminders, rescheduling, and cancellation behavior.
@@ -43,7 +43,7 @@ Cal.com’s official embed documentation covers [inline embedding](https://cal.c
 
 ## Public configuration
 
-Copy `.env.example` to an untracked `.env.local` and replace placeholders:
+The current public Cal.com values are compiled into the safe scheduler configuration. Copy `.env.example` to an untracked `.env.local` only when you need to override them:
 
 ```bash
 cp .env.example .env.local
@@ -51,9 +51,9 @@ cp .env.example .env.local
 
 ```dotenv
 VITE_CAL_ORIGIN=https://cal.com
-VITE_CAL_EVENT_INTRO_15=your-cal-username/intro-15
-VITE_CAL_EVENT_CONVERSATION_30=your-cal-username/conversation-30
-VITE_CAL_GENERAL_LINK=your-cal-username
+VITE_CAL_EVENT_SHORT_CONVERSATION=shivamg3/20min
+VITE_CAL_EVENT_EXTENDED_CONVERSATION=shivamg3/30min
+VITE_CAL_GENERAL_LINK=shivamg3
 VITE_SITE_URL=https://shivamg3.github.io
 ```
 
@@ -96,10 +96,10 @@ npm run invite:create -- \
   --name "Jane Smith" \
   --email "jane@example.com" \
   --company "Acme" \
-  --title "Jane × Shivam — 15-minute conversation" \
+  --title "Jane × Shivam — short conversation" \
   --description "A quick conversation about the partnership idea we discussed." \
-  --event "intro-15" \
-  --duration 15 \
+  --event "short-conversation" \
+  --duration 20 \
   --expires "2026-08-31" \
   --messages
 ```

@@ -23,8 +23,8 @@ function validPayload(overrides = {}) {
     company: 'Acme',
     title: 'Jane × Shivam — conversation',
     description: 'A quick conversation about manufacturing.',
-    eventKey: 'intro-15',
-    duration: 15,
+    eventKey: 'short-conversation',
+    duration: 20,
     iat: now,
     nbf: now,
     exp: now + 3600,
@@ -50,6 +50,12 @@ beforeAll(async () => {
 
 describe('verifyInvitationToken', () => {
   it('accepts a valid signed invitation', async () => expect((await verifyInvitationToken(await sign(), options())).ok).toBe(true));
+
+  it('accepts the configured 30-minute extended conversation', async () => {
+    const result = await verifyInvitationToken(await sign(validPayload({ eventKey: 'extended-conversation', duration: 30 })), options());
+    expect(result.ok).toBe(true);
+    expect(result.invitation).toMatchObject({ eventKey: 'extended-conversation', duration: 30 });
+  });
 
   it('rejects a tampered payload', async () => {
     const token = await sign();

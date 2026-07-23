@@ -15,13 +15,13 @@ vi.mock('./calSchedulerAdapter', () => ({
   }),
 }));
 
-const invitation = { name: 'Alex Rivera', email: 'alex@example.com', eventKey: 'intro-15', duration: 15 };
+const invitation = { name: 'Alex Rivera', email: 'alex@example.com', eventKey: 'short-conversation', duration: 20 };
 
 beforeEach(() => {
   controls.ready = null;
   controls.error = null;
   controls.success = null;
-  vi.stubEnv('VITE_CAL_EVENT_INTRO_15', 'shivam/intro-15');
+  vi.stubEnv('VITE_CAL_EVENT_SHORT_CONVERSATION', 'shivam/20min');
 });
 
 describe('SchedulerEmbed', () => {
@@ -38,7 +38,7 @@ describe('SchedulerEmbed', () => {
     await screen.findByTestId('cal-component');
     act(() => controls.error());
     expect(screen.getByRole('alert')).toHaveTextContent('calendar couldn’t load');
-    expect(screen.getByRole('link', { name: /Open scheduling page/ })).toHaveAttribute('href', expect.stringContaining('cal.com/shivam/intro-15'));
+    expect(screen.getByRole('link', { name: /Open scheduling page/ })).toHaveAttribute('href', expect.stringContaining('cal.com/shivam/20min'));
   });
 
   it('forwards only the documented successful-booking event data', async () => {

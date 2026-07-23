@@ -1,15 +1,16 @@
 import policy from '../../config/invitation-policy.json';
 
-const envNames = {
-  'intro-15': 'VITE_CAL_EVENT_INTRO_15',
-  'conversation-30': 'VITE_CAL_EVENT_CONVERSATION_30',
+const eventDefinitions = {
+  'short-conversation': { envName: 'VITE_CAL_EVENT_SHORT_CONVERSATION', defaultCalLink: 'shivamg3/20min' },
+  'extended-conversation': { envName: 'VITE_CAL_EVENT_EXTENDED_CONVERSATION', defaultCalLink: 'shivamg3/30min' },
 };
 
 const SAFE_CAL_LINK = /^[A-Za-z0-9][A-Za-z0-9._-]*(?:\/[A-Za-z0-9][A-Za-z0-9._-]*)*$/;
 
 export function getSchedulerConfig(eventKey, env = import.meta.env) {
-  if (!policy.events[eventKey] || !envNames[eventKey]) throw new Error('unknown-event');
-  const calLink = env[envNames[eventKey]]?.trim();
+  const definition = eventDefinitions[eventKey];
+  if (!policy.events[eventKey] || !definition) throw new Error('unknown-event');
+  const calLink = env[definition.envName]?.trim() || definition.defaultCalLink;
   const origin = (env.VITE_CAL_ORIGIN || 'https://cal.com').replace(/\/$/, '');
   if (!calLink || !SAFE_CAL_LINK.test(calLink) || !['https://cal.com', 'https://app.cal.com'].includes(origin)) {
     throw new Error('scheduler-not-configured');
@@ -23,7 +24,7 @@ export function getSchedulerConfig(eventKey, env = import.meta.env) {
 }
 
 export function getGeneralSchedulerUrl(env = import.meta.env) {
-  const calLink = env.VITE_CAL_GENERAL_LINK?.trim();
+  const calLink = env.VITE_CAL_GENERAL_LINK?.trim() || 'shivamg3';
   const origin = (env.VITE_CAL_ORIGIN || 'https://cal.com').replace(/\/$/, '');
   if (!calLink || !SAFE_CAL_LINK.test(calLink) || !['https://cal.com', 'https://app.cal.com'].includes(origin)) return null;
   return `${origin}/${calLink}`;

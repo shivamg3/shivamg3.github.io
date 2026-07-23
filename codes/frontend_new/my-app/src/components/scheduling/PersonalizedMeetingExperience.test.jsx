@@ -7,7 +7,7 @@ vi.mock('../../scheduling/SchedulerEmbed', () => ({
 }));
 
 const invitation = {
-  firstName: 'Alex', name: 'Alex Rivera', company: 'Acme', title: 'Alex × Shivam', description: 'A conversation about the partnership.', duration: 15, eventKey: 'intro-15',
+  firstName: 'Alex', name: 'Alex Rivera', company: 'Acme', title: 'Alex × Shivam', description: 'A conversation about the partnership.', duration: 20, eventKey: 'short-conversation',
 };
 
 afterEach(() => vi.useRealTimers());
