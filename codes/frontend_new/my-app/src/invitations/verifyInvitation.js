@@ -10,7 +10,7 @@ export async function verifyInvitationToken(token, options = {}) {
     if (parts.length !== 3 || parts.some((part) => !part)) throw new InvitationValidationError('malformed-token');
     const [encodedHeader, encodedPayload, encodedSignature] = parts;
     const header = decodeJsonSegment(encodedHeader);
-    if (!header || header.alg !== 'ES256' || header.typ !== 'JWT' || typeof header.kid !== 'string') {
+    if (!header || header.alg !== 'ES256' || (header.typ !== undefined && header.typ !== 'JWT') || typeof header.kid !== 'string') {
       throw new InvitationValidationError('invalid-header');
     }
     const activeKeySet = options.keySet || keySet;

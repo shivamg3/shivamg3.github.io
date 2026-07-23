@@ -32,6 +32,15 @@ function validPayload(overrides = {}) {
   };
 }
 
+function compactPayload(overrides = {}) {
+  return {
+    n: 'Jane Smith',
+    d: 20,
+    x: now + 3600,
+    ...overrides,
+  };
+}
+
 async function sign(payload = validPayload(), headerOverrides = {}) {
   const header = { alg: 'ES256', typ: 'JWT', kid: 'test-key', ...headerOverrides };
   const signingInput = `${encode(header)}.${encode(payload)}`;
@@ -50,6 +59,21 @@ beforeAll(async () => {
 
 describe('verifyInvitationToken', () => {
   it('accepts a valid signed invitation', async () => expect((await verifyInvitationToken(await sign(), options())).ok).toBe(true));
+
+  it('accepts compact name-only invitations and supplies standard copy', async () => {
+    const result = await verifyInvitationToken(await sign(compactPayload(), { typ: undefined }), options());
+    expect(result.ok).toBe(true);
+    expect(result.invitation).toMatchObject({
+      name: 'Jane Smith',
+      firstName: 'Jane',
+      title: 'A conversation with Shivam',
+      description: 'Choose a time that works for you, and we’ll take it from there.',
+      eventKey: 'short-conversation',
+      duration: 20,
+    });
+    expect(result.invitation).not.toHaveProperty('email');
+    expect(result.invitation).not.toHaveProperty('company');
+  });
 
   it('accepts the configured 30-minute extended conversation', async () => {
     const result = await verifyInvitationToken(await sign(validPayload({ eventKey: 'extended-conversation', duration: 30 })), options());
