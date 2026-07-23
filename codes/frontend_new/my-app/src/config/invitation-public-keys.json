@@ -1,0 +1,13 @@
+{
+  "keys": [
+    {
+      "kid": "invite-key-1",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "use": "sig",
+      "x": "bYUKH7g0yFH9In3KTHV_uTDoO6cSXh2eQJ0rdktD5TY",
+      "y": "cykJnwa5k35OW45s33M7M5-3WP_AH8E56ygYYcHQM5I"
+    }
+  ]
+}

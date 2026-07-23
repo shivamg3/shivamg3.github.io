@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="home-page">
       <section className="hero">
-        <div className="hero-portrait"><img src="/me.jpg" alt="Shivam Garg" /><span>Based in Urbana, Illinois</span></div>
+        <div className="hero-portrait"><img src={`${import.meta.env.BASE_URL}me.jpg`} alt="Shivam Garg" /><span>Based in Urbana, Illinois</span></div>
         <div className="hero-words">
           <p className="kicker">Mechanical engineer, researcher & entrepreneur</p>
           <h1>I’m building a more open, intelligent future for manufacturing.</h1>

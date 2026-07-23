@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "issuer": "shivam-personal-website",
+  "audience": "https://shivamg3.github.io",
+  "events": {
+    "intro-15": {
+      "durations": [15]
+    },
+    "conversation-30": {
+      "durations": [30]
+    }
+  },
+  "limits": {
+    "name": 120,
+    "firstName": 80,
+    "email": 254,
+    "company": 120,
+    "title": 180,
+    "description": 500
+  }
+}

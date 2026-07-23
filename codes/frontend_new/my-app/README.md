@@ -1,12 +1,19 @@
-# React + Vite
+# Shivam Garg — personal website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React 19 + Vite site deployed to GitHub Pages with `npm run deploy`.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm ci --legacy-peer-deps
+npm run dev
+npm run lint
+npm test
+npm run build
+```
 
-## Expanding the ESLint configuration
+## Personalized scheduling
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The homepage supports signed, expiring personal meeting invitations backed by Cal.com. Private signing material stays local; the site contains only public verification keys.
+
+See [Personalized scheduling](docs/personalized-scheduling.md) for Cal.com setup, key generation, invitation commands, privacy guidance, testing, rotation, and GitHub Pages limitations.
