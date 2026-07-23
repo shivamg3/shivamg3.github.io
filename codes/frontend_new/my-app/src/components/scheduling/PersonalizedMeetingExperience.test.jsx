@@ -16,7 +16,7 @@ describe('PersonalizedMeetingExperience', () => {
   it('opens a personalized accessible dialog', async () => {
     render(<PersonalizedMeetingExperience invitation={invitation} />);
     expect(await screen.findByRole('dialog')).toHaveAttribute('aria-modal', 'true');
-    expect(screen.getByText(/Alex Rivera, I created this invitation/)).toBeInTheDocument();
+    expect(screen.getByText(/Alex, I created this invitation/)).toBeInTheDocument();
   });
 
   it('closes, restores the homepage, and reopens from the session chip', async () => {
@@ -46,7 +46,7 @@ describe('PersonalizedMeetingExperience', () => {
   });
 
   it('renders script-like invitation text without executing HTML', async () => {
-    render(<PersonalizedMeetingExperience invitation={{ ...invitation, name: '<img src=x onerror=alert(1)>' }} />);
+    render(<PersonalizedMeetingExperience invitation={{ ...invitation, firstName: '<img src=x onerror=alert(1)>' }} />);
     expect(await screen.findByText(/<img src=x onerror=alert\(1\)>/)).toBeInTheDocument();
     expect(document.querySelector('img[src="x"]')).toBeNull();
   });

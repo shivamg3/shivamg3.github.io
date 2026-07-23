@@ -5,10 +5,10 @@
 The site accepts invitation URLs in this form:
 
 ```text
-https://shivamg3.github.io/#m=<signed-token>
+https://shivamg3.github.io/#meet=<signed-token>
 ```
 
-The fragment is consumed before React renders and is immediately removed with `history.replaceState`. It is not sent in the initial HTTP request, added to the document title, logged, persisted, or forwarded to analytics. The token is verified in the browser with Web Crypto and a committed public ECDSA P-256 key. Only the local private key can create a valid ES256 signature.
+The fragment is consumed before React renders and is immediately removed with `history.replaceState`. It is not sent in the initial HTTP request, added to the document title, logged, persisted, or forwarded to analytics. The token is verified in the browser with Web Crypto and a committed public ECDSA P-256 key. Only the local private key can create a valid ES256 signature. Previously generated compact `#m=` links remain accepted for compatibility.
 
 After verification, React keeps the normalized invitation in memory for that page session. A lazy-loaded overlay imports the official Cal.com embed only for a valid invitation. Cal.com handles availability, timezone conversion, conflicts, event creation, notifications, reminders, rescheduling, cancellation, and meeting locations. The site listens to `linkReady`, `linkFailed`, and `bookingSuccessfulV2`; the deprecated `bookingSuccessful` event is not used.
 
@@ -28,13 +28,13 @@ No private key, Cal.com API key, OAuth secret, webhook secret, recipient list, o
 
 Repository code cannot configure a private calendar account. Complete these steps in Cal.com:
 
-1. Confirm the Conversation Scheduling event type remains active and supports both 20- and 30-minute durations.
+1. Confirm the `20min` and `30min` event types remain active.
 2. Connect the Google or Outlook calendar used for conflict checking.
 3. Set the availability schedule and timezone.
 4. Configure buffers, minimum notice, booking horizon, and daily limits.
-5. Confirm the event allows both 20- and 30-minute bookings.
+5. Confirm `20min` is a 20-minute event and `30min` is a 30-minute event.
 6. Select the destination calendar where bookings should be created.
-7. Configure Google Meet, Zoom, Teams, phone, or an in-person location.
+7. Configure the same link-based Google Meet URL as the location on both event types.
 8. Configure confirmation emails, reminders, rescheduling, and cancellation behavior.
 9. Make a real test booking and confirm both organizer and attendee notifications.
 10. Copy the public `username/event-slug` values into the Vite environment configuration below.
@@ -51,9 +51,9 @@ cp .env.example .env.local
 
 ```dotenv
 VITE_CAL_ORIGIN=https://cal.com
-VITE_CAL_EVENT_SHORT_CONVERSATION=shivamg3/conversation-scheduling
-VITE_CAL_EVENT_EXTENDED_CONVERSATION=shivamg3/conversation-scheduling
-VITE_CAL_GENERAL_LINK=shivamg3/conversation-scheduling
+VITE_CAL_EVENT_SHORT_CONVERSATION=shivamg3/20min
+VITE_CAL_EVENT_EXTENDED_CONVERSATION=shivamg3/30min
+VITE_CAL_GENERAL_LINK=shivamg3/20min
 VITE_SITE_URL=https://shivamg3.github.io
 ```
 
@@ -94,6 +94,12 @@ To invalidate every existing link immediately, generate a fresh key ID, replace 
 ```bash
 npm run invite:create -- \
   --name "Jane Smith" \
+  --first-name "Jane" \
+  --email "jane@example.com" \
+  --company "Acme" \
+  --title "Jane × Shivam — short conversation" \
+  --description "A quick conversation about the partnership idea we discussed." \
+  --event "short-conversation" \
   --duration 20 \
   --expires "2026-08-31" \
   --messages
@@ -101,17 +107,17 @@ npm run invite:create -- \
 
 The command validates the invitation, generates a random UUID, signs it, prints the full URL and UTC expiration, and copies the URL when the operating system clipboard is available. `--messages` prints optional email and messaging copy. It never writes recipient data to a tracked file.
 
-New invitations contain only the recipient’s name, duration, and expiration. The event type, standard conversation copy, and fixed security context are inferred by the website instead of being repeated inside every URL.
+New invitations include the personalized conversation title and description so each recipient sees the context Shivam wrote for them.
 
-- required: `name`, `duration`, `expires`
-- optional: `not-before`, `kid`
+- required: `name`, `title`, `description`, `event`, `duration`, `expires`
+- optional: `first-name`, `email`, `company`, `not-before`, `kid`
 - operational: `private-key`, `messages`, `no-copy`
 
 Expiration accepts `YYYY-MM-DD` (ending at 23:59:59 UTC) or a full ISO timestamp. Event keys and durations must match the allowlist.
 
 ## Privacy
 
-Signed tokens provide integrity, not encryption. Anyone holding a link can decode its claims. New links therefore contain only the recipient’s name; Cal.com collects the attendee’s email during booking. Do not treat the URL as secret or send it through an untrusted shortening service.
+Signed tokens provide integrity, not encryption. Anyone holding a link can decode its claims. Email is therefore optional: omit `--email` to prefill only the name and let Cal.com collect the address during booking. Do not put sensitive discussions, confidential data, or secrets in the description.
 
 Recipient content is rendered by React as text, never as HTML. It is not stored in `localStorage`, cookies, generated files, or a service worker. Closing the overlay retains it only in JavaScript memory so the invitation can be reopened during the current page session.
 

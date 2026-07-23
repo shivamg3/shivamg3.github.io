@@ -55,7 +55,7 @@ export default function PersonalizedMeetingOverlay({ invitation, onClose, onBook
         <aside className="invitation-details">
           <div className="meeting-host"><img src={`${import.meta.env.BASE_URL}me.jpg`} alt="Shivam Garg" /><span>Invitation from Shivam</span></div>
           <p className="meeting-overline">Personal invitation</p>
-          <h2 id="meeting-title">{invitation.name}, I created this invitation for our conversation.</h2>
+          <h2 id="meeting-title">{invitation.firstName}, I created this invitation for our conversation.</h2>
           <div className="meeting-topic"><h3>{invitation.title}</h3><p id="meeting-description">{invitation.description}</p></div>
           <div className="meeting-meta"><span>{invitation.duration} minutes</span>{invitation.company && <span>{invitation.company}</span>}</div>
           <p className="meeting-reassurance">Choose any time that works for you. The calendar will adjust to your timezone.</p>
