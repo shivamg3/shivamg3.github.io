@@ -5,7 +5,7 @@
 The site accepts invitation URLs in this form:
 
 ```text
-https://shivamg3.github.io/#meet=<signed-token>
+https://shivamg3.github.io/#m=<signed-token>
 ```
 
 The fragment is consumed before React renders and is immediately removed with `history.replaceState`. It is not sent in the initial HTTP request, added to the document title, logged, persisted, or forwarded to analytics. The token is verified in the browser with Web Crypto and a committed public ECDSA P-256 key. Only the local private key can create a valid ES256 signature.
@@ -94,11 +94,6 @@ To invalidate every existing link immediately, generate a fresh key ID, replace 
 ```bash
 npm run invite:create -- \
   --name "Jane Smith" \
-  --email "jane@example.com" \
-  --company "Acme" \
-  --title "Jane × Shivam — short conversation" \
-  --description "A quick conversation about the partnership idea we discussed." \
-  --event "short-conversation" \
   --duration 20 \
   --expires "2026-08-31" \
   --messages
@@ -106,17 +101,17 @@ npm run invite:create -- \
 
 The command validates the invitation, generates a random UUID, signs it, prints the full URL and UTC expiration, and copies the URL when the operating system clipboard is available. `--messages` prints optional email and messaging copy. It never writes recipient data to a tracked file.
 
-Supported fields:
+New invitations contain only the recipient’s name, duration, and expiration. The event type, standard conversation copy, and fixed security context are inferred by the website instead of being repeated inside every URL.
 
-- required: `name`, `title`, `description`, `event`, `duration`, `expires`
-- optional: `first-name`, `email`, `company`, `not-before`, `kid`
+- required: `name`, `duration`, `expires`
+- optional: `not-before`, `kid`
 - operational: `private-key`, `messages`, `no-copy`
 
 Expiration accepts `YYYY-MM-DD` (ending at 23:59:59 UTC) or a full ISO timestamp. Event keys and durations must match the allowlist.
 
 ## Privacy
 
-Signed tokens provide integrity, not encryption. Anyone holding a link can decode its claims. Email is therefore optional: omit `--email` to prefill only the name and let Cal.com collect the address during booking. Do not put sensitive discussions, confidential data, or secrets in the description.
+Signed tokens provide integrity, not encryption. Anyone holding a link can decode its claims. New links therefore contain only the recipient’s name; Cal.com collects the attendee’s email during booking. Do not treat the URL as secret or send it through an untrusted shortening service.
 
 Recipient content is rendered by React as text, never as HTML. It is not stored in `localStorage`, cookies, generated files, or a service worker. Closing the overlay retains it only in JavaScript memory so the invitation can be reopened during the current page session.
 
