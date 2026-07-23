@@ -28,11 +28,11 @@ No private key, Cal.com API key, OAuth secret, webhook secret, recipient list, o
 
 Repository code cannot configure a private calendar account. Complete these steps in Cal.com:
 
-1. Confirm the configured 20-minute Short Conversation and 30-minute Extended Conversation event types remain active.
+1. Confirm the Conversation Scheduling event type remains active and supports both 20- and 30-minute durations.
 2. Connect the Google or Outlook calendar used for conflict checking.
 3. Set the availability schedule and timezone.
 4. Configure buffers, minimum notice, booking horizon, and daily limits.
-5. Confirm the Short Conversation remains 20 minutes and the Extended Conversation remains 30 minutes.
+5. Confirm the event allows both 20- and 30-minute bookings.
 6. Select the destination calendar where bookings should be created.
 7. Configure Google Meet, Zoom, Teams, phone, or an in-person location.
 8. Configure confirmation emails, reminders, rescheduling, and cancellation behavior.
@@ -51,9 +51,9 @@ cp .env.example .env.local
 
 ```dotenv
 VITE_CAL_ORIGIN=https://cal.com
-VITE_CAL_EVENT_SHORT_CONVERSATION=shivamg3/20min
-VITE_CAL_EVENT_EXTENDED_CONVERSATION=shivamg3/30min
-VITE_CAL_GENERAL_LINK=shivamg3
+VITE_CAL_EVENT_SHORT_CONVERSATION=shivamg3/conversation-scheduling
+VITE_CAL_EVENT_EXTENDED_CONVERSATION=shivamg3/conversation-scheduling
+VITE_CAL_GENERAL_LINK=shivamg3/conversation-scheduling
 VITE_SITE_URL=https://shivamg3.github.io
 ```
 
