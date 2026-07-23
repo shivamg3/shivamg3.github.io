@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+.invite-private-key.pem
+.invite-private-key-*.pem
 
 # Editor directories and files
 .vscode/*
