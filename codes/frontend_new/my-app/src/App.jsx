@@ -5,6 +5,7 @@ import About from './components/About';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Education from './components/Education';
+import IITDelhiStory from './components/IITDelhiStory';
 import InvalidInvitation from './components/scheduling/InvalidInvitation';
 import PersonalizedMeetingExperience from './components/scheduling/PersonalizedMeetingExperience';
 import { verifyInvitationToken } from './invitations/verifyInvitation';
@@ -40,6 +41,7 @@ export default function App({ initialInvitationToken = null }) {
           <Route path="/about" element={<About />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/education" element={<Education />} />
+          <Route path="/story" element={<IITDelhiStory />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<Home />} />
         </Routes>

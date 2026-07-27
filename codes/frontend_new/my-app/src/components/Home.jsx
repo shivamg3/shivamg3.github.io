@@ -30,6 +30,7 @@ export default function Home() {
       <section className="home-stories">
         <div className="section-intro"><p className="kicker">A few recent chapters</p><h2>Work worth talking about.</h2></div>
         <div className="editorial-list">
+          <Link to="/story"><span>Earlier chapter</span><h3>The IIT Delhi years</h3><p>Formula Racing, Infinity Hyperloop, engineering teams, service, and the experiences that shaped what came next.</p><b>Explore →</b></Link>
           <a href="https://csl.illinois.edu/news-and-media/ferreira-group-kicking-off-a-revolution-in-computer-numerical-control-for-manufacturing" target="_blank" rel="noreferrer"><span>Research</span><h3>Rethinking CNC for the cloud era</h3><p>The Illinois story behind our award-winning work and the beginnings of ToolBit.</p><b>Read ↗</b></a>
           <a href="https://landuyt.illinois.edu/news/82922" target="_blank" rel="noreferrer"><span>Entrepreneurship</span><h3>Leading ToolBit to a $5K win</h3><p>Building an open path to smarter CNC machines without replacing existing hardware.</p><b>Read ↗</b></a>
           <a href="https://studyandsave.blogspot.com/2024/07/mastering-your-budget-cost-efficient.html" target="_blank" rel="noreferrer"><span>Writing</span><h3>Lessons beyond engineering</h3><p>Practical thoughts on budgeting, student life, and making deliberate choices.</p><b>Read ↗</b></a>

@@ -10,4 +10,11 @@ describe('App scheduling behavior', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(screen.queryByText(/Loading Shivam’s availability/)).not.toBeInTheDocument();
   });
+
+  it('presents the IIT Delhi archive as one chapter, not the complete story', () => {
+    render(<MemoryRouter initialEntries={['/story']}><App /></MemoryRouter>);
+    expect(screen.getByRole('heading', { name: /years that made engineering personal/i })).toBeInTheDocument();
+    expect(screen.getByText(/not my complete story/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /explore current work/i })).toHaveAttribute('href', '/projects');
+  });
 });
