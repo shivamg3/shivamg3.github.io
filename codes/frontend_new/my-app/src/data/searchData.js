@@ -54,4 +54,10 @@ export const searchContent = [
     content: "This portfolio was built using JavaScript, React, and Tailwind CSS, accelerated by my AI workflow.",
     url: "/"
   },
+  {
+    id: 10,
+    title: "The IIT Delhi Years",
+    content: "An early chapter featuring Formula Racing, Infinity Hyperloop, engineering, teaching, service, teams, and travel.",
+    url: "/story"
+  },
 ];
