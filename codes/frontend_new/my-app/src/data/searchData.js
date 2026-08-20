@@ -60,4 +60,10 @@ export const searchContent = [
     content: "An early chapter featuring Formula Racing, Infinity Hyperloop, engineering, teaching, service, teams, and travel.",
     url: "/story"
   },
+  {
+    id: 11,
+    title: "Where India’s Electronics Manufacturing Chain Gets Stuck",
+    content: "A field-level analysis of product integration, PCB manufacturing and assembly, semiconductor design, and fabrication in India.",
+    url: "/articles/india-electronics-manufacturing"
+  },
 ];

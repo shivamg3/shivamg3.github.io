@@ -10,6 +10,7 @@ export default defineConfig({
       input: {
         main: resolve(import.meta.dirname, 'index.html'),
         story: resolve(import.meta.dirname, 'story/index.html'),
+        indiaElectronicsArticle: resolve(import.meta.dirname, 'articles/india-electronics-manufacturing/index.html'),
       },
     },
   },
