@@ -6,6 +6,7 @@ import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Education from './components/Education';
 import IITDelhiStory from './components/IITDelhiStory';
+import IndiaElectronicsArticle from './components/IndiaElectronicsArticle';
 import InvalidInvitation from './components/scheduling/InvalidInvitation';
 import PersonalizedMeetingExperience from './components/scheduling/PersonalizedMeetingExperience';
 import { verifyInvitationToken } from './invitations/verifyInvitation';
@@ -42,6 +43,7 @@ export default function App({ initialInvitationToken = null }) {
           <Route path="/projects" element={<Projects />} />
           <Route path="/education" element={<Education />} />
           <Route path="/story" element={<IITDelhiStory />} />
+          <Route path="/articles/india-electronics-manufacturing" element={<IndiaElectronicsArticle />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<Home />} />
         </Routes>

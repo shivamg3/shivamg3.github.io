@@ -17,4 +17,11 @@ describe('App scheduling behavior', () => {
     expect(screen.getByText(/not my complete story/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /explore current work/i })).toHaveAttribute('href', '/projects');
   });
+
+  it('renders the electronics manufacturing article and its three layers', () => {
+    render(<MemoryRouter initialEntries={['/articles/india-electronics-manufacturing']}><App /></MemoryRouter>);
+    expect(screen.getByRole('heading', { name: /where does india’s electronics manufacturing chain actually get stuck/i })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: /three-layer electronics manufacturing chain/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /turning a design into silicon is harder/i })).toBeInTheDocument();
+  });
 });
