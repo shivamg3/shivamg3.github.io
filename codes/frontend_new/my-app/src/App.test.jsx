@@ -22,6 +22,6 @@ describe('App scheduling behavior', () => {
     render(<MemoryRouter initialEntries={['/articles/india-electronics-manufacturing']}><App /></MemoryRouter>);
     expect(screen.getByRole('heading', { name: /where does india’s electronics manufacturing chain actually get stuck/i })).toBeInTheDocument();
     expect(screen.getByRole('img', { name: /three-layer electronics manufacturing chain/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /turning a design into silicon is harder/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /the semiconductor layer \(chip design and fabrication layer\)/i })).toBeInTheDocument();
   });
 });
