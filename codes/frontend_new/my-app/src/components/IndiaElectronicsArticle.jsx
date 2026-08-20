@@ -23,9 +23,14 @@ export default function IndiaElectronicsArticle() {
   }, []);
 
   return (
-    <article className="insight-article">
+    <article className="insight-article article-simple">
       <header className="article-hero article-hero-verbatim">
         <h1>Where Does India’s Electronics Manufacturing Chain Actually Get Stuck?</h1>
+        <div className="article-byline" aria-label="Article information">
+          <span>By Shivam Garg</span>
+          <time dateTime="2026-08-20">August 20, 2026</time>
+          <span>8 min read</span>
+        </div>
       </header>
 
       <div className="article-layout article-layout-verbatim">

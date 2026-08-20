@@ -21,6 +21,9 @@ describe('App scheduling behavior', () => {
   it('renders the electronics manufacturing article and its three layers', () => {
     render(<MemoryRouter initialEntries={['/articles/india-electronics-manufacturing']}><App /></MemoryRouter>);
     expect(screen.getByRole('heading', { name: /where does india’s electronics manufacturing chain actually get stuck/i })).toBeInTheDocument();
+    expect(screen.getByText('By Shivam Garg')).toBeInTheDocument();
+    expect(screen.getByText('August 20, 2026')).toBeInTheDocument();
+    expect(screen.getByText('8 min read')).toBeInTheDocument();
     expect(screen.getByRole('img', { name: /three-layer electronics manufacturing chain/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /the semiconductor layer \(chip design and fabrication layer\)/i })).toBeInTheDocument();
   });
