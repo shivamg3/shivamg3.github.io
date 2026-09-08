@@ -1,0 +1,13 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Garg;Shivam;;;
+FN:Shivam Garg
+TITLE:Mechanical Engineer | Advanced Manufacturing
+EMAIL;TYPE=INTERNET,WORK:work.sgarg@gmail.com
+TEL;TYPE=CELL,VOICE:+919877510228
+URL:https://shivamg3.github.io/
+X-SOCIALPROFILE;TYPE=linkedin:https://www.linkedin.com/in/shivam-garg-iitd/
+ADR;TYPE=HOME:;;;;;;India
+NOTE:IIT Delhi | University of Illinois Urbana-Champaign
+REV:20260908T000000Z
+END:VCARD
