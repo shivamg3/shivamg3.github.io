@@ -5,11 +5,18 @@ const intro = document.querySelector('.tap-intro');
 function updateLocalTime() {
   const now = new Date();
   const hour = now.getHours();
-  timeElement.dateTime = now.toISOString();
-  timeElement.textContent = new Intl.DateTimeFormat(undefined, {
+  const time = new Intl.DateTimeFormat(undefined, {
     hour: 'numeric',
     minute: '2-digit',
   }).format(now);
+  const date = new Intl.DateTimeFormat(undefined, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(now);
+
+  timeElement.dateTime = now.toISOString();
+  timeElement.textContent = `${time} · ${date}`;
 
   if (hour >= 5 && hour < 12) dayWishElement.textContent = 'Hope you have a wonderful day ahead.';
   else if (hour >= 12 && hour < 17) dayWishElement.textContent = 'Hope the rest of your day goes beautifully.';
@@ -22,7 +29,6 @@ function skipIntro() {
 }
 
 updateLocalTime();
-window.setInterval(updateLocalTime, 30000);
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   skipIntro();
