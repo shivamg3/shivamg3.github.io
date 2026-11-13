@@ -1,46 +1,42 @@
-# Homepage direction: Ideas in motion
+# Portfolio redesign
 
-The first screen should be an invitation to play, with almost no reading required.
+User constraints: traditional type, no star mark, no generated slogans or personal quotes, almost no homepage text, and no explode control.
 
-Three possible directions:
+## Pages
 
-| Direction | Experience | Tradeoff |
-| --- | --- | --- |
-| Kinetic sculpture (implemented) | A custom orange rotor inside machined metal gimbals; drag, pause, and pull apart. | Distinctive engineering identity with a compact procedural scene. |
-| Miniature workshop | Move through a small bench with CNC, electronics, and research objects as project portals. | Stronger storytelling, but requires more modeling and navigation work. |
-| Shape playground | Responsive objects collide, rearrange, and reveal projects. | More playful; needs care to keep navigation obvious and accessible. |
+- Home: name, work link, procedural 3D sculpture, drag and keyboard rotation, pause.
+- Work: six projects, category filters, six detail pages, source links and labelled schematics.
+- About: existing profile information and original photographs.
+- Education: original institutions, dates and degrees.
+- Writing: article index and the existing article, preserved verbatim.
+- IIT Delhi: original archive photographs, academic and team facts, source PDF.
+- Contact: email, clipboard control, LinkedIn, GitHub, calendar and vCard.
+- Contact card: matching serif styling and native contact links.
+- Unknown URLs: 404 page.
 
-The starting point uses warm paper, orange, metal, generous space, a three-word heading, and direct links into the existing work, story, and contact pages. No stock imagery, external 3D models, autoplay audio, or remote rendering services are needed.
+Georgia and Times New Roman are system fonts; no font service is required. All gallery photographs are local. The sculpture loads separately and has a static fallback. System reduced-motion preferences are respected.
 
-## Implemented
+## Development and validation
 
-- A lazy-loaded Three.js scene with a procedural three-ring sculpture, ribbed rotor, and floating components.
-- Slow motion, pointer parallax, drag rotation, an exploded view, and pause/play.
-- Arrow-key rotation and Enter/Space to toggle the exploded view.
-- System reduced-motion preference, including changes during a visit. Explicit play remains available.
-- Animation stops while the tab is hidden or the scene is offscreen. GPU pixel ratio is capped.
-- A static vector illustration appears during loading and remains available if WebGL fails.
-- A separate mobile composition and touch controls. Vertical scrolling remains available.
-- Existing content and invitation/scheduling behavior continue through the current routes.
-
-## Local preview
-
-From `codes/frontend_new/my-app`:
+From this application directory:
 
 ```sh
 npm ci --legacy-peer-deps
 npm run dev
+npm test
+npm run build
+node scripts/verify-static.mjs
 ```
 
-The existing maps dependency declares older React peers, so the repository currently requires `--legacy-peer-deps` for installation.
+The maps dependency retained from the original repository declares older React peers, so installation uses legacy peer resolution.
 
-Checks: `npm test` and `npm run build`.
+## GitHub Pages release
 
-## Next design decisions
+The build generates directory indexes for all fourteen application routes, plus the separate contact card, 404 page, sitemap and robots.txt. Direct page loads do not depend on a client-side redirect.
 
-1. Evaluate the sculpture direction in motion before investing in the rest of the visual system.
-2. Consider replacing the abstract mechanism with recognizable parts from ToolBit or a CNC assembly.
-3. Carry the new visual language into a visual project index and individual project scenes.
-4. Prepare a matching social preview image and final homepage metadata when the direction is selected.
+```sh
+node scripts/prepare-pages.mjs
+node scripts/verify-static.mjs ../../..
+```
 
-This branch changes application source. The production site currently also tracks compiled HTML/assets at the repository root; those release files have deliberately not been replaced as part of this first design preview. Review the direction before building and publishing the production release.
+The preparation helper copies built release files into the repository root without removing unrelated assets. Review the draft PR before merging or publishing.

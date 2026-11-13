@@ -8,7 +8,7 @@ vi.mock('./kinetic-scene', () => ({ createKineticScene: vi.fn() }));
 afterEach(() => { vi.resetAllMocks(); vi.unstubAllGlobals(); });
 
 function controller() {
-  return { setExploded: vi.fn(), setPaused: vi.fn(), rotate: vi.fn(), dispose: vi.fn() };
+  return { setPaused: vi.fn(), rotate: vi.fn(), dispose: vi.fn() };
 }
 
 describe('Kinetic homepage', () => {
@@ -16,14 +16,12 @@ describe('Kinetic homepage', () => {
     const scene = controller();
     createKineticScene.mockReturnValue(scene);
     const { unmount } = render(<MemoryRouter><Home /></MemoryRouter>);
-    const explode = await screen.findByRole('button', { name: 'Pull it apart' });
-    await waitFor(() => expect(explode).toBeEnabled());
-    const sculpture = screen.getByRole('img', { name: /interactive orange/i });
+    const pause = await screen.findByRole('button', { name: 'Pause sculpture animation' });
+    await waitFor(() => expect(pause).toBeEnabled());
+    const sculpture = screen.getByRole('img', { name: /interactive kinetic/i });
     fireEvent.keyDown(sculpture, { key: 'ArrowRight' });
     expect(scene.rotate).toHaveBeenCalledWith(0.2, 0);
-    fireEvent.keyDown(sculpture, { key: 'Enter' });
-    expect(screen.getByRole('button', { name: 'Bring it together' })).toHaveAttribute('aria-pressed', 'true');
-    expect(scene.setExploded).toHaveBeenLastCalledWith(true);
+    expect(screen.queryByRole('button', { name: /explode|assemble/i })).not.toBeInTheDocument();
     unmount();
     expect(scene.dispose).toHaveBeenCalledTimes(1);
   });
@@ -44,9 +42,9 @@ describe('Kinetic homepage', () => {
   it('keeps the work accessible when 3D cannot initialize', async () => {
     createKineticScene.mockImplementation(() => { throw new Error('WebGL unavailable'); });
     render(<MemoryRouter><Home /></MemoryRouter>);
-    expect(await screen.findByRole('status')).toHaveTextContent('Explore the work');
-    expect(screen.getByRole('button', { name: 'Pull it apart' })).toBeDisabled();
-    expect(screen.getByRole('link', { name: 'Explore my work' })).toHaveAttribute('href', '/projects');
+    expect(await screen.findByRole('status')).toHaveTextContent('3D unavailable');
+    expect(screen.getByRole('button', { name: 'Pause sculpture animation' })).toBeDisabled();
+    expect(screen.getByRole('link', { name: 'Work' })).toHaveAttribute('href', '/projects');
     expect(screen.getByRole('img')).toHaveAccessibleName(/interaction is unavailable/i);
   });
 });

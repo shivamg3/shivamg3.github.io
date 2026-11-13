@@ -29,8 +29,8 @@ export function createKineticScene(canvas, onContextLost) {
   const metal = new THREE.MeshStandardMaterial({ color: 0xcbd0d0, metalness: 1, roughness: 0.22 });
   const brightMetal = new THREE.MeshStandardMaterial({ color: 0xe2e4e1, metalness: 0.94, roughness: 0.15 });
   const darkMetal = new THREE.MeshStandardMaterial({ color: 0x343a3b, metalness: 0.85, roughness: 0.32 });
-  const orange = new THREE.MeshPhysicalMaterial({ color: 0xec4a12, metalness: 0.4, roughness: 0.28, clearcoat: 0.4, clearcoatRoughness: 0.2 });
-  const orangeDark = new THREE.MeshStandardMaterial({ color: 0xb84112, metalness: 0.6, roughness: 0.35 });
+  const orange = new THREE.MeshPhysicalMaterial({ color: 0x264f68, metalness: 0.4, roughness: 0.28, clearcoat: 0.4, clearcoatRoughness: 0.2 });
+  const orangeDark = new THREE.MeshStandardMaterial({ color: 0x122d3d, metalness: 0.6, roughness: 0.35 });
   const blue = new THREE.MeshPhysicalMaterial({ color: 0x7c9aaf, metalness: 0.75, roughness: 0.21, clearcoat: 0.6 });
 
   const rig = new THREE.Group();
@@ -162,7 +162,6 @@ export function createKineticScene(canvas, onContextLost) {
   let paused = false;
   let visible = !document.hidden;
   let inView = true;
-  let exploded = 0;
   let explosion = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.7;
   let drag = null;
   const pointer = new THREE.Vector2();
@@ -179,7 +178,7 @@ export function createKineticScene(canvas, onContextLost) {
     previousTime = time;
     if (!paused) elapsed += dt;
     const ease = 1 - Math.exp(-dt * 5);
-    explosion += (exploded - explosion) * (reducedMotion.matches || paused ? 1 : ease);
+    explosion += -explosion * (reducedMotion.matches || paused ? 1 : ease);
     rotation.lerp(targetRotation, reducedMotion.matches || paused ? 1 : ease);
     rig.rotation.set(rotation.y + (reducedMotion.matches || paused ? 0 : pointer.y * 0.055), rotation.x + (reducedMotion.matches || paused ? 0 : pointer.x * 0.09), -0.34);
     rig.position.y = Math.sin(elapsed * 0.65) * 0.09;
@@ -194,7 +193,7 @@ export function createKineticScene(canvas, onContextLost) {
     }
     shadow.scale.x = 1 + Math.sin(elapsed * 0.65) * 0.03;
     renderer.render(scene, camera);
-    const settling = Math.abs(explosion - exploded) > 0.001 || rotation.distanceTo(targetRotation) > 0.001;
+    const settling = Math.abs(explosion) > 0.001 || rotation.distanceTo(targetRotation) > 0.001;
     if (!paused || settling) frameId = requestAnimationFrame(renderFrame);
   }
   function requestFrame() { if (!frameId && !disposed && !contextLost && visible && inView) frameId = requestAnimationFrame(renderFrame); }
@@ -242,7 +241,6 @@ export function createKineticScene(canvas, onContextLost) {
   renderFrame();
 
   return {
-    setExploded(value) { exploded = value ? 1 : 0; requestFrame(); },
     setPaused(value) { paused = value; previousTime = 0; requestFrame(); },
     rotate(x, y) { targetRotation.x += x; targetRotation.y = THREE.MathUtils.clamp(targetRotation.y + y, -1.1, 1.1); requestFrame(); },
     dispose() {

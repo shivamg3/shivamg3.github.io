@@ -6,16 +6,16 @@ import App from './App';
 describe('App scheduling behavior', () => {
   it('shows the normal homepage and no scheduling UI without a token', () => {
     render(<MemoryRouter><App /></MemoryRouter>);
-    expect(screen.getByRole('heading', { name: /ideas in motion/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /shivam garg/i, level: 1 })).toBeInTheDocument();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(screen.queryByText(/Loading Shivam’s availability/)).not.toBeInTheDocument();
   });
 
   it('presents the IIT Delhi archive as one chapter, not the complete story', () => {
     render(<MemoryRouter initialEntries={['/story']}><App /></MemoryRouter>);
-    expect(screen.getByRole('heading', { name: /years that made engineering personal/i })).toBeInTheDocument();
-    expect(screen.getByText(/not my complete story/i)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /explore current work/i })).toHaveAttribute('href', '/projects');
+    expect(screen.getByRole('heading', { name: 'IIT Delhi', level: 1 })).toBeInTheDocument();
+    expect(screen.getByText(/pre-uiuc archive/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Work →' })).toHaveAttribute('href', '/projects');
   });
 
   it('renders the electronics manufacturing article and its three layers', () => {
