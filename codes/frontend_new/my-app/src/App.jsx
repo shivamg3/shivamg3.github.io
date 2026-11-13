@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import Home from './components/Home';
 import About from './components/About';
 import Projects from './components/Projects';
@@ -12,8 +12,12 @@ import PersonalizedMeetingExperience from './components/scheduling/PersonalizedM
 import { verifyInvitationToken } from './invitations/verifyInvitation';
 
 const navItems = [['/', 'Home'], ['/about', 'Story'], ['/projects', 'Work'], ['/education', 'Journey'], ['/contact', 'Connect']];
+const homeNavItems = [['/projects', 'Work'], ['/about', 'Story'], ['/contact', 'Say hello']];
 
 export default function App({ initialInvitationToken = null }) {
+  const { pathname } = useLocation();
+  const routePath = pathname.replace(/\/+$/, '') || '/';
+  const isHome = routePath === '/' || !['/about', '/projects', '/education', '/story', '/articles/india-electronics-manufacturing', '/contact'].includes(routePath);
   const [invitationState, setInvitationState] = useState(() => initialInvitationToken ? { status: 'checking' } : { status: 'none' });
 
   useEffect(() => {
@@ -27,13 +31,13 @@ export default function App({ initialInvitationToken = null }) {
   }, [initialInvitationToken]);
 
   return (
-    <div className="site-shell">
+    <div className={`site-shell${isHome ? ' site-shell--kinetic' : ''}`}>
       <header className="site-header">
         <NavLink to="/" className="brand" aria-label="Shivam Garg, home">
-          <span className="brand-mark">S</span><span>Shivam Garg</span>
+          <span className="brand-mark">{isHome ? <svg className="kinetic-brand-symbol" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 2v28M2 16h28M6.1 6.1l19.8 19.8M6.1 25.9 25.9 6.1" stroke="currentColor" strokeWidth="3.5" /></svg> : 'S'}</span><span>Shivam Garg</span>
         </NavLink>
         <nav className="site-nav" aria-label="Primary navigation">
-          {navItems.map(([path, label]) => <NavLink key={path} to={path} end={path === '/'} className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>{label}</NavLink>)}
+          {(isHome ? homeNavItems : navItems).map(([path, label]) => <NavLink key={path} to={path} end={path === '/'} className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>{label}{isHome && path === '/contact' && <span className="kinetic-nav-arrow" aria-hidden="true">↗</span>}</NavLink>)}
         </nav>
       </header>
       <main className="site-main">
