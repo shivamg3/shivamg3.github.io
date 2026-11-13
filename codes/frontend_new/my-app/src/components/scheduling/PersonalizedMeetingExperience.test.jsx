@@ -16,7 +16,7 @@ describe('PersonalizedMeetingExperience', () => {
   it('opens a personalized accessible dialog', async () => {
     render(<PersonalizedMeetingExperience invitation={invitation} />);
     expect(await screen.findByRole('dialog')).toHaveAttribute('aria-modal', 'true');
-    expect(screen.getByText(/Alex, I created this invitation/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Alex' })).toBeInTheDocument();
   });
 
   it('closes, restores the homepage, and reopens from the session chip', async () => {

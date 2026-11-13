@@ -1,29 +1,9 @@
-import { useEffect } from 'react';
-
-const ARTICLE_PATH = '/articles/india-electronics-manufacturing/';
-const ARTICLE_URL = `https://shivamg3.github.io${ARTICLE_PATH}`;
+import { Link } from 'react-router-dom';
 
 export default function IndiaElectronicsArticle() {
-  useEffect(() => {
-    const previousTitle = document.title;
-    const description = document.querySelector('meta[name="description"]');
-    const canonical = document.querySelector('link[rel="canonical"]');
-    const previousDescription = description?.content;
-    const previousCanonical = canonical?.href;
-
-    document.title = 'Where Does India’s Electronics Manufacturing Chain Actually Get Stuck? — Shivam Garg';
-    if (description) description.content = 'A field-level look at India’s electronics manufacturing chain—from product integration and PCB assembly to semiconductor design and fabrication.';
-    if (canonical) canonical.href = ARTICLE_URL;
-
-    return () => {
-      document.title = previousTitle;
-      if (description && previousDescription) description.content = previousDescription;
-      if (canonical && previousCanonical) canonical.href = previousCanonical;
-    };
-  }, []);
-
   return (
     <article className="insight-article article-simple">
+      <Link className="back-link" to="/writing">← Writing</Link>
       <header className="article-hero article-hero-verbatim">
         <h1>Where Does India’s Electronics Manufacturing Chain Actually Get Stuck?</h1>
         <div className="article-byline" aria-label="Article information">

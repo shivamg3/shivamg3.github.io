@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://shivamg3.github.io/sitemap.xml

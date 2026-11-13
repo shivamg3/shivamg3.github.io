@@ -1,44 +1,89 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import './kinetic-home.css';
 
-const PAPER = 'https://www.sciencedirect.com/science/article/pii/S0278612526001056?via%3Dihub';
+function Arrow({ diagonal = false }) {
+  return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d={diagonal ? 'M6 18 18 6M6 6h12v12' : 'M4 12h15m-6-6 6 6-6 6'} stroke="currentColor" strokeWidth="1.5" /></svg>;
+}
+
+function SculptureFallback() {
+  return <svg className="kinetic-fallback" viewBox="0 0 700 700" aria-hidden="true">
+    <defs>
+      <linearGradient id="metal" x1="0" x2="1" y2="1"><stop stopColor="#fff" /><stop offset=".25" stopColor="#a2a6a7" /><stop offset=".55" stopColor="#ecece8" /><stop offset=".8" stopColor="#6d7478" /><stop offset="1" stopColor="#d4d7d5" /></linearGradient>
+      <radialGradient id="orange"><stop offset="0" stopColor="#7292a3" /><stop offset=".6" stopColor="#31576c" /><stop offset="1" stopColor="#142d3c" /></radialGradient>
+      <filter id="soft-shadow"><feGaussianBlur stdDeviation="14" /></filter>
+    </defs>
+    <ellipse cx="365" cy="589" rx="159" ry="19" fill="#55564c" opacity=".12" filter="url(#soft-shadow)" />
+    <g transform="translate(350 330) rotate(-32)">
+      <ellipse rx="200" ry="238" fill="none" stroke="url(#metal)" strokeWidth="32" />
+      <ellipse rx="220" ry="115" fill="none" stroke="#355d72" strokeWidth="17" transform="rotate(65)" />
+      <circle r="116" fill="url(#orange)" />
+      <path d="M-112-17h224M-106 17h212M-95 49H95M-77 78H77" fill="none" stroke="#173647" strokeWidth="4" />
+      <ellipse rx="92" ry="185" fill="none" stroke="url(#metal)" strokeWidth="18" transform="rotate(-32)" />
+    </g>
+    <circle cx="120" cy="150" r="23" fill="#78879a" /><circle cx="570" cy="470" r="13" fill="#355d72" />
+  </svg>;
+}
 
 export default function Home() {
+  const canvasRef = useRef(null);
+  const sceneRef = useRef(null);
+  const settingsRef = useRef({ paused: false });
+  const [paused, setPaused] = useState(() => typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [sceneState, setSceneState] = useState('loading');
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return undefined;
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updatePreference = event => setPaused(event.matches);
+    preference.addEventListener('change', updatePreference);
+    return () => preference.removeEventListener('change', updatePreference);
+  }, []);
+
+  useEffect(() => {
+    let disposed = false;
+    import('./kinetic-scene.js').then(({ createKineticScene }) => {
+      if (disposed) return;
+      try {
+        const scene = createKineticScene(canvasRef.current, () => setSceneState('fallback'));
+        sceneRef.current = scene;
+        scene.setPaused(settingsRef.current.paused);
+        setSceneState('ready');
+      } catch {
+        setSceneState('fallback');
+      }
+    }).catch(() => { if (!disposed) setSceneState('fallback'); });
+    return () => { disposed = true; sceneRef.current?.dispose(); sceneRef.current = null; };
+  }, []);
+
+  useEffect(() => {
+    settingsRef.current = { paused };
+    sceneRef.current?.setPaused(paused);
+  }, [paused]);
+
+  function handleKeys(event) {
+    const rotations = { ArrowLeft: [-0.2, 0], ArrowRight: [0.2, 0], ArrowUp: [0, -0.2], ArrowDown: [0, 0.2] };
+    if (rotations[event.key]) {
+      event.preventDefault();
+      sceneRef.current?.rotate(...rotations[event.key]);
+    }
+  }
+
   return (
-    <div className="home-page">
-      <section className="hero">
-        <div className="hero-portrait"><img src={`${import.meta.env.BASE_URL}me.jpg`} alt="Shivam Garg" /><span>Based in Urbana, Illinois</span></div>
-        <div className="hero-words">
-          <p className="kicker">Mechanical engineer, researcher & entrepreneur</p>
-          <h1>I’m building a more open, intelligent future for manufacturing.</h1>
-          <p className="hero-lede">I’m Shivam—a hands-on engineer who moves between machine shops, research labs, and startup rooms to turn ambitious ideas into working systems.</p>
-          <div className="hero-actions"><Link className="text-link strong" to="/projects">See what I’m building <span>→</span></Link><Link className="text-link" to="/contact">Start a conversation <span>↗</span></Link></div>
-        </div>
-      </section>
-
-      <section className="proof-strip" aria-label="Highlights">
-        <div><strong>First author</strong><span>Journal of Manufacturing Systems</span></div>
-        <div><strong>NAMRC award</strong><span>Outstanding Paper, 2026</span></div>
-        <div><strong>$5K winner</strong><span>ToolBit · Illinois deep tech</span></div>
-      </section>
-
-      <section className="feature-paper">
-        <div className="paper-number">01</div>
-        <div className="paper-copy"><p className="kicker">Selected research</p><h2>Cloud-Direct NC: A new generation of numerical control technology</h2><p>Our first-author paper reimagines the architecture behind CNC, connecting machine control with modern cloud, client, and embedded resources.</p><div className="paper-meta">Journal of Manufacturing Systems · Volume 86 · 2026</div></div>
-        <a className="round-link" href={PAPER} target="_blank" rel="noreferrer" aria-label="Read the paper">↗</a>
-      </section>
-
-      <section className="home-stories">
-        <div className="section-intro"><p className="kicker">A few recent chapters</p><h2>Work worth talking about.</h2></div>
-        <div className="editorial-list">
-          <Link to="/articles/india-electronics-manufacturing"><span>New analysis</span><h3>Where India’s electronics manufacturing chain gets stuck</h3><p>A layer-by-layer look at product integration, PCB manufacturing, and semiconductor fabrication.</p><b>Read →</b></Link>
-          <Link to="/story"><span>Earlier chapter</span><h3>The IIT Delhi years</h3><p>Formula Racing, Infinity Hyperloop, engineering teams, service, and the experiences that shaped what came next.</p><b>Explore →</b></Link>
-          <a href="https://csl.illinois.edu/news-and-media/ferreira-group-kicking-off-a-revolution-in-computer-numerical-control-for-manufacturing" target="_blank" rel="noreferrer"><span>Research</span><h3>Rethinking CNC for the cloud era</h3><p>The Illinois story behind our award-winning work and the beginnings of ToolBit.</p><b>Read ↗</b></a>
-          <a href="https://landuyt.illinois.edu/news/82922" target="_blank" rel="noreferrer"><span>Entrepreneurship</span><h3>Leading ToolBit to a $5K win</h3><p>Building an open path to smarter CNC machines without replacing existing hardware.</p><b>Read ↗</b></a>
-          <a href="https://studyandsave.blogspot.com/2024/07/mastering-your-budget-cost-efficient.html" target="_blank" rel="noreferrer"><span>Writing</span><h3>Lessons beyond engineering</h3><p>Practical thoughts on budgeting, student life, and making deliberate choices.</p><b>Read ↗</b></a>
-        </div>
-      </section>
-
-      <section className="closing-note"><p>I care about serious engineering, generous collaboration, and building things that earn their place in the world.</p><Link to="/about">A little more about me →</Link></section>
-    </div>
+    <section className="kinetic-hero" aria-labelledby="kinetic-title">
+      <div className="kinetic-copy">
+        <h1 id="kinetic-title">Shivam{' '}<br />Garg</h1>
+        <Link className="kinetic-enter" to="/projects">Work <Arrow /></Link>
+      </div>
+      <div className={'kinetic-stage kinetic-stage--' + sceneState} data-scene-state={sceneState}>
+        <SculptureFallback />
+        <canvas ref={canvasRef} className="kinetic-canvas" role="img" aria-label={sceneState === 'fallback' ? 'Kinetic sculpture. 3D interaction is unavailable on this device.' : 'Interactive kinetic sculpture. Drag or use arrow keys to rotate.'} aria-describedby="sculpture-instructions" tabIndex={sceneState === 'ready' ? 0 : -1} onKeyDown={handleKeys} />
+      </div>
+      <p id="sculpture-instructions" className="sr-only">Drag or use arrow keys to rotate.</p>
+      <div className="kinetic-controls" aria-label="Sculpture controls">
+        <button className="kinetic-pause" type="button" aria-label={paused ? 'Play sculpture animation' : 'Pause sculpture animation'} aria-pressed={paused} disabled={sceneState !== 'ready'} onClick={() => setPaused(value => !value)}>{paused ? <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m5 3 8 5-8 5z" fill="currentColor" /></svg> : <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3v10M11 3v10" stroke="currentColor" strokeWidth="1.5" /></svg>}</button>
+        {sceneState === 'fallback' && <span className="sr-only" role="status">3D unavailable</span>}
+      </div>
+    </section>
   );
 }
